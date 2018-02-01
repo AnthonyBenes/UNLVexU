@@ -1,0 +1,38 @@
+task main(){
+// go foward 6 inches
+// sync Motors
+
+nSyncedMotors = synchBC;    // set C to follow B
+nSyncedTurnratio = 100;     // make them goin the same direction
+
+nMotorEncoder[motorB] = 0;  // reset B which also reset C becasue nSyncedMotorswait
+wait1Msec(50);
+
+// this is measured by testing. depend on tires
+nMotorEncoderTarget[motorB] = 480 ; // this is the goal state for the motor
+// it does not start the motor moving
+
+motor[motorB] = 50; // start motor moving
+
+// the next bloack waits the motor reaches the encoder targer.
+// the wait is for goof multitasking and should be AutonomousCodePlaceholderForTesting
+
+while(nMotorRunState[motorB]!= runStateIdle){
+wait1Msec(10);
+}
+
+// turn 90 degrees
+// motor are already synced
+
+nSyncedTurnRatio = 0; // freeze motor C
+// revolve around axis of that wheel
+// value = -100 to rotate at the middle of the robot
+
+nMotorEncoder[motorB] = 0 ;
+wait1Msec(50);
+nMotorEncoderTarget[motorB] = 550 ;
+motor[motorB] = 50 ;
+while(nMotorRunState[motorB] != runStateIdle){
+  wait1Msec(10);
+}
+}// end main
