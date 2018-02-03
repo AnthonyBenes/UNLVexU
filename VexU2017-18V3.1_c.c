@@ -84,6 +84,7 @@ task usercontrol()
 *Default mode
 */
 void mobileLiftMode(){
+		tankControl(vexRT[Ch3], vexRT[Ch2]);
 
 		// lift system control.
 		armControl(motor[liftMobileLowerLeft],vexRT[Btn5U],vexRT[Btn5D],50);
