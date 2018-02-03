@@ -3,8 +3,10 @@
 *
 */
 
-#define INCH_PER_REV
-#define CHASSIS_WIDTH
+const float INCH_PER_TICK = ;
+const float CHASSIS_LENGTH = ;// chassis length from center to center
+												// of front wheel.
+const float CHASSIS_WIDTH = ;
 
 /*Function declaration */
 
@@ -13,36 +15,6 @@
 *@parameter  int rightSide
 *					   int leftSide
 */
-void setMotorSpeed(int rightSide, int leftSide);
-
-
-/* this robot use 2 encoder to track distance traveled
-*foward() function move the bot forward
-*@parameter float dist // requested distance to go( inches)
-*						int speed  // speed while moving to requested distance( power -100, 100)
-*Note: #define INCH_PER_REV  before using the function
-*built in function used in this program. nMotorEncoder[] ; nMotorEncoderTarget[]
-*/
-void forward(float dist,int speed);
-
-
-/*
-* Robot will rotate when execute this function
-*@parameter int degree // rotate in CCW if positive input, CW if negative input
-*						int speed  // rate while rotating (-100, 100)
-*this function will ensure the rotation angle by computing the cnage in distance
-* of roration. as well as double checking with the gyroscope
-* remember to #define radius before using this function
-* built in function used : nMotorEncoder[], nMotorTarget[]
-*
-* THIS FUNCTION IS STILL A WORK ON PROCESS
-* STILL NEED TO FIGURE OUT A WAY TO DOUBLE CHECK THE TURNING ANGLE
-*	WITH THE GYROSCOPE
-*/
-void rotate(int degree, int speed);
-
-
-/*Executable function*/
 void setMotorSpeed(int rightSide, int leftSide){
 	motor[driveBackLeft] = leftSide;
 	motor[driveFrontLeft] = leftSide;
@@ -50,89 +22,74 @@ void setMotorSpeed(int rightSide, int leftSide){
 	motor[driveFrontRight] = rightSide;
 }
 
-void forward(float dist,int speed){
 
+/*
+*this function move the robot foward to the requester distance in inches
+*parameter:float dist (inches) (distance from the center of the chassis)
+*						int speed (-100 , 100)
+*Tick refer to one encoder unit.
+*/
+void goForward(float dist,int speed){
 
-	float degreeToTurn = INCH_PER_REV * 360 ;// connvert rotation to degree.
+	// these two variables are set to the number of tick to turn relative
+	// from the center of wheel to requested position
+	float frontMotorTick = (dist- CHASSIS_LENGTH/2) / INCH_PER_TICK;
+	float backMotorTick = (dist+ CHASSIS_LENGTH/2) / INCH_PER_TICK;
+
 
 	//initialize all encoder value at 0
-	nMotorEncoder[driveFrontleft] = 0;
-	nMotorEncoder[driveFrontRight] = 0;
-
-	// set motor move to requested distance.( set to requested tick)
-	nMotorEncoderTarget[driveFrontLeft] = degreeToTurn;
-	nMotorEncoderTarget[driveFrontRight]= degreeToturn;
-
-	// move
-	motor[driveBackLeft] = speed;
-	motor[driveFrontLeft] = speed;
-	motor[driveBackRight] = speed;
-	motor[driveFrontRight] = speed;
-
-	// check when encoder counter is finish
-	while(nMotorRunState[driveFrontLeft] != runStateIdle &&
-				nMotorRunState[driveFrontRight] != runStateIdle){
-					wait1Msec(1);
-				}
-
-	// turn off motor when done
 	motor[driveBackLeft] = 0;
 	motor[driveFrontLeft] = 0;
 	motor[driveBackRight] = 0;
 	motor[driveFrontRight] = 0;
+
+	// reset the encoder.
+	resetMotorEncoder(motor[driveFrontLeft]);
+	resetMotorEncoder(motor[driveFrontRight]);
+	resetMotorEncoder(motor[driveBackLeft]);
+	resetMotorEncoder(motor[driveBackRight]);
+
+	//set the encoder and motor to requested distance
+	setMotorTarget(motor[driveBackLeft],backMotorTick,speed);
+	setMotorTarget(motor[driveBackRight],backMotorTick,speed);
+	setMotorTarget(motor[driveFrontLeft],frontMotorTick,speed);
+	setMotorTarget(motor[driveFrontRight],frontMotorTick,speed);
+
+
+	// wait until motor stop
+ 	waitUntilMotorStop(motor[driveBackLeft]);
+	waitUntilMotorStop(motor[driveBackRight]);
+	waitUntilMotorStop(motor[driveFrontLeft]);
+	waitUntilMotorStop(motor[driveFrontRight]);
+
 }// end forward
 
+/*
+*This function will rotate the robot relative to it front drive
+*constrain axis
 
-void rotate(int degree, int speed){
-	// declare variable
-	float distanceOfRotation, rotation, degreeToTurn;
-	#define ONE_RADIAN PI/180
+		|||-----|||
+			|	 ^  |
+      |  |  |
+			|	 |  |
+		|||-----|||
+*/
+void headRotation(int degree, int power){
 
-	// compute
-	distanceOfRotation = (degree*ONE_RADIAN)*(CHASSIS_WIDTH/2) ; // base on s = r*theta
-	rotation = distanceOfRotation / circumference;  // convert to number of rotation
-	degreeToTurn = rotation * 360 ;// connvert rotation to degree.
+}// end headRotate()
 
-	//initialize all encoder value at 0
-	nMotorEncoder[driveFrontleft] = 0;
-	nMotorEncoder[driveFrontRight] = 0;
 
-	// set motor move to requested distance.( set to requested tick)
-	// turn CCW if speed input > 0
-	if(speed > 0){
-	// set degree to turn
-	nMotorEncoderTarget[driveFrontRight]= degreeToturn;
-	nMotorEncoderTarget[driveFrontLeft] = -degreeToTurn;
+/*
+*This function will rotate the robot relative to it front drive
+*constrain axis
 
-	// set motor
-	motor[driveBackRight] = -speed;
-	motor[driveFrontRight] = speed;
-	motor[driveBackLeft] = -speed;
-	motor[driveFrontLeft] = speed;
+		|||-----|||
+			|	 |  |
+      |  |  |
+			|	 _  |
+		|||-----|||
+				 ^(axis of rotation)
+*/
+void tailRotation(int degree, int power){
 
-	}else{// turn CW if speed input < 0
-	//set degree to turn
-	nMotorEncoderTarget[driveFrontRight]= -degreeToturn;
-	nMotorEncoderTarget[driveFrontLeft] = degreeToTurn;
-
-	// set motor
-
-	motor[driveBackRight] = speed;
-	motor[driveFrontRight] = -speed;
-	motor[driveBackLeft] = speed;
-	motor[driveFrontLeft] = -speed;
-	}
-
-	// check when encoder counter is finish
-	while(nMotorRunState[driveFrontLeft] != runStateIdle &&
-				nMotorRunState[driveFrontRight] != runStateIdle){
-					wait1Msec(1);
-	}
-
-	// turn off motor when done
-	motor[driveBackLeft] = 0;
-	motor[driveFrontLeft] = 0;
-	motor[driveBackRight] = 0;
-	motor[driveFrontRight] = 0;
-
-}// end rotate()
+}// end tailRotation

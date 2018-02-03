@@ -1,33 +1,14 @@
 /*
 *Author VEX
 *Date: feb 2nd 2018
-*version 1.0
+*version 1.2
 *
 *this .c extension file contain executable void funtion for mobileMode
+
 */
 
 // User control code here, inside the loop
 void mobileMode(){
-bool mobileForward = true;
-
-while (true)
-{
-  /*
-  Drive
-  Calls driveFunctions program to change motor speeds
-  */
-  if(mobileForward){
-    setMotorSpeed(vexRT[Ch2], vexRT[Ch3]);
-  }
-  else{
-    setMotorSpeed(vexRT[Ch3], vexRT[Ch2]);
-  }
-  if(vexRT[Btn8D] == 1){
-    mobileForward = false;
-  }
-  else if(vexRT[Btn8R] == 1){
-    mobileForward = true;
-  }
 
   /*
   Lift Program
@@ -145,4 +126,6 @@ while (true)
     SensorValue[coneLiftPneumatics] = 0;
   }
 } // end pneumatic lift systems
+
+
 }// end void main .
