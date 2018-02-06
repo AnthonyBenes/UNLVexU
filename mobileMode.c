@@ -106,25 +106,6 @@ void mobileMode(){
   }*/
 
 
-
-  //Pneumatic Lift Systems
-  if(vexRT[Btn7L] == 1){
-    //Activates Mobile Lift Pneumatics
-    SensorValue[mobileLiftPneumatics] = 1;
-  }
-  else if(vexRT[Btn7D] == 1){
-    //Deactivates Mobile Lift Pneumatics
-    SensorValue[mobileLiftPneumatics] = 0;
-  }
-
-  if(vexRT[Btn7U] == 1){
-    //Activates Cone Lift Pneumatics
-    SensorValue[coneLiftPneumatics] = 1;
-  }
-  else if(vexRT[Btn7R] == 1){
-    //Deactivates Cone Lift Pneumatics
-    SensorValue[coneLiftPneumatics] = 0;
-  }
 } // end pneumatic lift systems
 
 

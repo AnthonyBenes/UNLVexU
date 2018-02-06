@@ -1,6 +1,6 @@
 
 //Ryan Thomas [10:05 AM]
-//added this C snippet: VexU2017-18V3.c 
+//added this C snippet: VexU2017-18V3.c
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in1,  liftAngleLeft, sensorPotentiometer)
 #pragma config(Sensor, in2,  liftAngleRight, sensorPotentiometer)
@@ -227,8 +227,3 @@ task usercontrol()
    }
  }
 }
-Collapse
-
-
-
-Message #programming
