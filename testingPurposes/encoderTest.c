@@ -96,8 +96,12 @@ void pre_auton()
 
 task autonomous()
 {
+	// ..........................................................................
+	// Insert user code here.
+	// ..........................................................................
 
-
+	// Remove this function call once you have "real" code.
+	AutonomousCodePlaceholderForTesting();
 }
 
 
@@ -113,53 +117,155 @@ task autonomous()
 
 task usercontrol()
 {
+	int testCase = 0 ;
 
-bLCDBacklight = true;                                    // Turn on LCD Backlight
-string mainBattery, backupBattery;
-	// User control code here, inside the loop
-	bool mobileForward = true;
+	while(1){
+		if(vexRT[Btn8U] == 1){
+			testCase = 1;
+		}
+		else if(vexRT[Btn8D] == 1){
+			testCase = 2;
+		}else if(vexRT[Btn8R] == 1){
+			testCase = 3;
+		}else if(vexRT[Btn8L] == 1){
+			testCase = 4;
+		}else if(vexRT[Btn7U] == 1){
+			testCase = 5;
+		}else if(vexRT[Btn7D] == 1){
+			testCase = 6;
+		}else if(vexRT[Btn7R] == 1){
+			testCase = 7;
+		}
 
-	while (true)
-	{
+		switch(testCase){
+			case 1:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
 
-	clearLCDLine(0);                                            // Clear line 1 (0) of the LCD
-	clearLCDLine(1);                                            // Clear line 2 (1) of the LCD
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
 
-	//Display the Primary Robot battery voltage
-	displayLCDString(0, 0, "Primary: ");
-	sprintf(mainBattery, "%1.2f%c", nImmediateBatteryLevel/1000.0,'V'); //Build the value to be displayed
-	displayNextLCDString(mainBattery);
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 1000){
+		    motor[port2] = 63 ;
+		    motor[port8] = 63 ;
+		  }
 
-	//Display the Backup battery voltage
-	displayLCDString(1, 0, "Backup: ");
-	sprintf(backupBattery, "%1.2f%c", BackupBatteryLevel/1000.0, 'V');    //Build the value to be displayed
-	displayNextLCDString(backupBattery);
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
 
-	//Short delay for the LCD refresh rate
-	wait1Msec(100);
+			case 2:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
 
-	if(vexRT[Btn5U] == 1){
-		moveMotorTarget(motor[port8], 360, 50, true);
-		moveMotorTarget(motor[port2], 360, 50, true);
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
 
-		stopMotor(motor[port8]);
-		stopMotor(motor[port2]);
-	}
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 1500){
+		    motor[port2] = 63 ;
+		    motor[port8] = 63 ;
+		  }
 
-	if(vexRT[Btn6U] == 1){
-		moveMotorTarget(motor[port8], 720, 50, true);
-		moveMotorTarget(motor[port2], 720, 50, true);// 2 rev
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
 
-		stopMotor(motor[port8]);
-		stopMotor(motor[port2]);
-	}
+			case 3:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
 
-	if(vexRT[Btn7U] == 1){
-		moveMotorTarget(motor[port8], 1800, 50, true);
-		moveMotorTarget(motor[port2], 1800, 50, true);// 5 revolution
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
 
-		stopMotor(motor[port8]);
-		stopMotor(motor[port2]);
-	}
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 2500){
+		    motor[port2] = 63 ;
+		    motor[port8] = 63 ;
+		  }
+
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
+
+			case 4:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
+
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
+
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 5000){
+		    motor[port2] = 63 ;
+		    motor[port8] = 63 ;
+		  }
+
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
+
+			case 5:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
+
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
+
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 5000){
+		    motor[port2] = 90 ;
+		    motor[port8] = 90 ;
+		  }
+
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
+
+			case 6:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
+
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
+
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 5000){
+		    motor[port2] = 110 ;
+		    motor[port8] = 110 ;
+		  }
+
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
+
+			case 7:
+			// initialize setPID
+			setPIDforMotor(driveLeft);
+	    setPIDforMotor(driveRight);
+
+			resetMotorEncoder(motor[port2]);
+		  resetMotorEncoder(motor[port8]);
+
+		  // go to requested ticks.
+		  while(getMotorEncoder(port8) < 5000){
+		    motor[port2] = 127 ;
+		    motor[port8] = 127 ;
+		  }
+
+		  // stop motor
+		  motor[port2] = 0;
+		  motor[port8] = 0;
+		}
+
+		}
+	}//e nd while
 
 }
