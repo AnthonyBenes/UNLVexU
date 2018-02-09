@@ -1,8 +1,15 @@
 /*
-*Author UNL vex U
-*Date feb 2nd 2018
-*Version : 1.0
-*/
+  *Author UNL vex U
+  *Date feb 2nd 2018
+  *Version : 1.0
+  *Note:
+  *need to be Add:
+  *INCH_PER_TICK, TICK_PER_INCH,WHEEL_DIAMETER,.
+  *edit: innerMobileLift() function
+        rotate() function
+        frontMobileLift() idea . have the potentiometer change to encoder motor
+
+  */
 
 /* Define variables */
 // constant
@@ -93,8 +100,33 @@ EX: rotate('C',-100,100);
  * position.
  */
  void frontMobileLift(char position){
-   if(position == 'H'){
-
+   int value = sensor(rightLine);
+   if(position == 'L'){
+     if(sensorValue(liftAngleRight) != -240 ){
+       if(value > -240){
+         motor[liftMobileHigherLeft] = -63;
+        motor[liftMobileHigherRight] = -63;
+      }else if(value < -240){
+        motor[liftMobileHigherLeft] = 63;
+        motor[liftMobileHigherRight] =63;
+      }else{
+        stopMotor(liftMobileHigherLeft);
+        stopMotor(liftMobileHigherRight);
+      }
+     }
+   }else if(position == 'H'){
+     if(sensorValue(liftAngleRight) != 1200 ){
+       if(value > 1200){
+         motor[liftMobileHigherLeft] = -63;
+        motor[liftMobileHigherRight] = -63;
+      }else if(value < 1200){
+        motor[liftMobileHigherLeft] = 63;
+        motor[liftMobileHigherRight] =63;
+      }else{
+        stopMotor(liftMobileHigherLeft);
+        stopMotor(liftMobileHigherRight);
+      }
+     }
    }
  }
 
@@ -109,30 +141,62 @@ EX: rotate('C',-100,100);
     resetMotorEncoder(liftMobileLowerLeft);
 
     if(position == 'U'){
-      while(getMotorEncoder(liftMobileLowerRight) < TICKGOAL_PLACEHOLDER){
-        motor[liftMobileLowerLeft] = power ; // replace power with a number
-        motor[liftMolbileLowerRight] = power ; // replace power with a number
+      while(getMotorEncoder(liftMobileLowerRight) != 1250){
+        if(getMotorEncoder(liftMobileLowerRight) > 1250){
+        motor[liftMobileLowerLeft] = 50 ; // replace power with a number
+        motor[liftMolbileLowerRight] = 50 ; // replace power with a number
+      }else if(getMotorEncoder(liftMobileLowerRight) < 1250){
+        motor[liftMobileLowerLeft] = -50 ; // replace power with a number
+        motor[liftMolbileLowerRight] = -50 ; // replace power with a number
+      }else{
+        stopMotor(liftMolbileLowerRight);
+        stopMotor(liftMobileLowerLeft;
       }
     }else if(position == 'D'){
-      while(getMotorEncoder(liftMobileLowerRight)){
-        motor[liftMobileLowerLeft] = -power ; // replace power with a number
-        motor[liftMolbileLowerRight] = -power ; // replace power with a number
+      while(getMotorEncoder(liftMobileLowerRight) != 100 ){
+        if(getMotorEncoder(liftMobileLowerRight) > 100){
+        motor[liftMobileLowerLeft] = 50 ; // replace power with a number
+        motor[liftMolbileLowerRight] = 50 ; // replace power with a number
+      }else if(getMotorEncoder(liftMobileLowerRight) < 100){
+        motor[liftMobileLowerLeft] = -50 ; // replace power with a number
+        motor[liftMolbileLowerRight] = -50 ; // replace power with a number
+      }else{
+        stopMotor(liftMolbileLowerRight);
+        stopMotor(liftMobileLowerLeft;
+      }
       }else{
         // error from programmer
       }
     }
   }// end innerMobileLift
-  
+
+  /*
+   *This function activate the cone lift position.
+   * as well as the pneumatic lift
+   * @parameter char jointPos('R'(ready),'L'(lift),
+   *'LL'(local load),'R'(rest), bool extender . true = out. false = in .
+   */
+  void coneJoint(char jointPos, bool extender){
+    if(jointPos == 'R'){
+
+    }else if (jointPos == 'L'){
+
+    }else if(jointPos == '')
+  }
+
  task autonomous(){
+   innerMobileLift('D');
+   setMotor(leftDrive,50);
+   setMotor(rightDrive,50);
 
-    // inititialize all motor to run with PID loop
-    setPIDforMotor(liftMobileLowerLeft,true);
-    setPIDforMotor(liftMobileLowerRight,true);
+   untilBump(rightLine,10);
+   stopMotor(leftDrive);
+   stopMotor(rightDrive);
+   innerMobileLift('U');
 
-    setPIDforMotor(driveLeft,true);
-    setPIDforMotor(driveRight,true);
 
-    rotate('R',100);
-    wait()
+
+ }
+
 
  }
