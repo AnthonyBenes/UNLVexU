@@ -37,29 +37,25 @@ void goForward(float inch,int power){
   int tickGoal = inch * TICK_PER_INCH ;
 
   // start encoder count at 0
-  resetMotorEncoder(motor[port2]);
-  resetMotorEncoder(motor[port8]);
+  SensorValue[leftEncoder] = 0;
+  SensorValue[rightEncoder] = 0;
 
   // go to requested ticks.
-  while(getMotorEncoder(port8) < tickGoal){
-    motor[port2] = power ;
-    motor[port8] = power ;
+  while(SensorValue[leftEncoder] < tickGoal){
+    motor[leftDrive] = power ;
+    motor[rightDrive] = power ;
   }
-
-  // stop motor
-  motor[port2] = 0; //right
-  motor[port8] = 0; // left
 }
 
 /*
  *this function will rotate the robot
  *@parameter (char axis(L,C,R), int degree, int powe)
  *
-            |-------|
-             |     |
-             |  C  |
-             |     |
-            |-------|
+            |--------|
+             |      |
+             |  CM  |
+             |      |
+            |--------|
 EX: rotate('C',200,50);
   The robot will rotate at the C axis by 200 degrees(CW)
   with 50 power.
@@ -69,24 +65,13 @@ EX: rotate('C',-100,100);
   with 100 power.
   *
   */
- void rotate(char axis, int power){//
+ void rotate(int degree,int power){//
 
-   // initilize motor at 0 ticks.
-   resetMotorEncoder(frontRightDrive);
-   resetMotorEncoder(frontLeftDrive);
-   resetMotorEncoder(backRightDrive);
-   resetMotorEncoder(backLeftDrive);
+   // start encoder count at 0
+   SensorValue[leftEncoder] = 0;
+   SensorValue[rightEncoder] = 0;
 
-   if(axis == 'C'){
-     motor[port2] = power ; // left
-     motor[port8] = -power ;// right
-   }else if(axis == 'L'){
-     motor[port2] = -power ; // left
-     motor[port8] = 0 ;// right
-   }else if(axis == 'R'){
-     motor[port2] = power ; // left
-     motor[port8] = 0 ;// right
-   }
+
 
 
  }
@@ -134,6 +119,9 @@ EX: rotate('C',-100,100);
   *innerMobileLift(char position)
   *@parameter 'U' up, 'D' Down
   *return void
+  *This function need to be edit. we are planning put limit switch instead of
+  *using encoder to stop the inner lift motor
+  *
   */
   void innerMobileLift(char position){
         //reset encoder for motor on both side
@@ -141,7 +129,7 @@ EX: rotate('C',-100,100);
     resetMotorEncoder(liftMobileLowerLeft);
 
     if(position == 'U'){
-      while(getMotorEncoder(liftMobileLowerRight) != 1250){
+      while(getMotorEncoder(liftMobileLowerRight) != 1250){ //  planning to change it to bumper switch to detect.
         if(getMotorEncoder(liftMobileLowerRight) > 1250){
         motor[liftMobileLowerLeft] = 50 ; // replace power with a number
         motor[liftMolbileLowerRight] = 50 ; // replace power with a number
@@ -185,18 +173,4 @@ EX: rotate('C',-100,100);
   }
 
  task autonomous(){
-   innerMobileLift('D');
-   setMotor(leftDrive,50);
-   setMotor(rightDrive,50);
-
-   untilBump(rightLine,10);
-   stopMotor(leftDrive);
-   stopMotor(rightDrive);
-   innerMobileLift('U');
-
-
-
- }
-
-
  }
