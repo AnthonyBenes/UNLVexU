@@ -1,4 +1,18 @@
 
+/* Define variables */
+// constant
+float INCH_PER_TICK
+float TICK_PER_INCH
+float TICK_PER_REV 90
+
+float WHEEL_RADIUS 2.065
+float circumference = WHEEL_RADIUS * 2 * PI;
+
+// relative to the center point to the two wheel
+float CHASSIS_WIDTH 18
+float CHASSIS_LENGTH 15 // relative to the axle of the wheel 
+
+float ONE_RADIAN = PI/180;
 
 /*
  *This function convert distance request the robot to travel
