@@ -1,0 +1,26 @@
+P- proportional
+I- Integral
+D- derivative
+
+double error ;
+double P ,I , D ;
+double rightPot, leftPot; 
+
+error = abs(rightPot - leftPot)
+
+//P
+P= error * kP; 
+
+//I
+I += (error * kI) * delta time ;//integral(error*kI)dt
+
+//D
+D = lastError - error) * kD / deltaTime ; 
+
+pid = P + I +D ;
+
+setMotor(port2, power + pid);
+
+//////////////*****
+
+setPIDforMotor(port2);
