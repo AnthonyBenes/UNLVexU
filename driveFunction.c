@@ -59,7 +59,7 @@ void drive(float inch,int power){
  void frontMobileLift(char position){
    int value = sensor(rightLine);
    if(position == 'L'){
-     if(sensorValue(liftAngleRight) != -240 ){
+     while(sensorValue(liftAngleRight) != -240 ){
        if(value > -240){
          motor[liftMobileHigherLeft] = -63;
         motor[liftMobileHigherRight] = -63;
@@ -72,7 +72,7 @@ void drive(float inch,int power){
       }
      }
    }else if(position == 'H'){
-     if(sensorValue(liftAngleRight) != 1200 ){
+     while(sensorValue(liftAngleRight) != 1200 ){
        if(value > 1200){
          motor[liftMobileHigherLeft] = -63;
         motor[liftMobileHigherRight] = -63;

@@ -14,7 +14,7 @@ task autonomous(){
    //declare varible
    bool rightLineReached = false;
    bool leftLineReached = false;
-   int phase[10] = {};
+   //int phase[10] = {};
 
 /* loop 1*/
    // initialize sensor  value
@@ -24,7 +24,7 @@ task autonomous(){
    innerMobileLift('D');
 
    while(SensorValue[mobleGoalHigher] != 0 &&
-         getDistanceTraveled(SensorValue[rightEncoder] < 36 ){ // 36 5 blocks revlative to init distnave
+         getDistanceTraveled(SensorValue[rightEncoder]) < 36 ){ // 36 5 blocks revlative to init distnave
      motor[rightDrive] = 100 ;
      motor[leftDrive]  = 100 ;
     }
@@ -32,7 +32,7 @@ task autonomous(){
     frontMobileLift('U');
 
     while(SensorValue[mobleGoalLower] != 0 &&
-          getDistanceTraveled(SensorValue[rightEncoder] < 36 ){ // 36 5 blocks revlative to init distnave
+          getDistanceTraveled(SensorValue[rightEncoder]) < 36 ){ // 36 5 blocks revlative to init distnave
       motor[rightDrive] = 100 ;
       motor[leftDrive]  = 100 ;
      }
@@ -50,7 +50,7 @@ task autonomous(){
     motor[rightDrive] = -5;
     motor[leftDrive] = -5;
 
-    drive(DIST_FROM_LINE_SENSOR_TO_MIDPOINT,50 );
+    drive(5,50 ); // dist form center to mid pointt 
     SensorValue[leftEncoder] = 0;
     SensorValue[rightEncoder] = 0;
 
@@ -103,7 +103,7 @@ task autonomous(){
       // lower front mobile lift // lower potential energy
       frontMobileLift('M');
 
-     while(SensorValue[rightLine] != 1  || SensorValue[leftLine] != 1){
+     while(SensorValue[rightLine] > 2000  || SensorValue[leftLine] >2000){
        motor[rightDrive] = 90;
        motor[leftDrive] = 90;
      }
@@ -111,13 +111,9 @@ task autonomous(){
      motor[rightDrive] = -5;
      motor[leftDrive] = -5;
 
-     drive(DIST_FROM_LINE_SENSOR_TO_MIDPOINT,50 );
+     drive(5,50 );// DIST_FROM_LINE_SENSOR_TO_MIDPOINT
      SensorValue[leftEncoder] = 0;
      SensorValue[rightEncoder] = 0;
-
-
-
-
   }
 
 
