@@ -173,26 +173,69 @@ task leftHighLift(){
 task rightHighLift(){
 			if(targetLiftPosition == 3){ //Hight state
 				//goes up
+			while(SensorValue[liftAngleRight] < 910);{
 				motor[liftMobileHigherRight] = highLiftSpeed;
-				waitUntil(SensorValue[liftAngleRight] < 910);
+				if(mobileForward){
+					motor[port8] = vexRT[Ch3];
+					motor[port2] = vexRT[Ch2];
+				}
+				else{
+					motor[port8] = -(vexRT[Ch2]);
+					motor[port2] = -(vexRT[Ch3]);
+				}
+			}
 				motor[liftMobileHigherRight] = 0;
 				rightLiftPosition = 3;
 			}
 		else if(targetLiftPosition == 1){
 			//goes down
-			motor[liftMobileHigherRight] = -highLiftSpeed;
-			waitUntil(SensorValue[liftAngleRight] > 2200);
+			while(SensorValue[liftAngleRight] > 2200){
+				motor[liftMobileHigherRight] = -highLiftSpeed;
+				if(mobileForward){
+					motor[port8] = vexRT[Ch3];
+					motor[port2] = vexRT[Ch2];
+				}
+				else{
+					motor[port8] = -(vexRT[Ch2]);
+					motor[port2] = -(vexRT[Ch3]);
+				}
+			}
+			// set motor speed to zero once requested distance is reached.
 			rightLiftPosition = 1;
 			motor[liftMobileHigherRight] = 0;
 		}
 		else if(rightLiftPosition == 3 && targetLiftPosition == 2){ //middle state going down
-		motor[liftMobileHigherRight] = -highLiftSpeed;
-		waitUntil(SensorValue[liftAngleRight] > 1955);
+
+		while(SensorValue[liftAngleRight] > 1955){
+			motor[liftMobileHigherRight] = -highLiftSpeed;
+			if(mobileForward){
+				motor[port8] = vexRT[Ch3];
+				motor[port2] = vexRT[Ch2];
+			}
+			else{
+				motor[port8] = -(vexRT[Ch2]);
+				motor[port2] = -(vexRT[Ch3]);
+			}
+		}
+
+		// set motor speed zero once requested distance is reached.
 		motor[liftMobileHigherRight] = 0;
 		rightLiftPosition = 2;
+		
 		}else if(rightLiftPosition == 1 && targetLiftPosition == 2){ //middle state going up
-		motor[liftMobileHigherRight] = highLiftSpeed;
-		waitUntil(SensorValue[liftAngleRight] < 1955);
+		while(SensorValue[liftAngleRight] < 1955){
+			motor[liftMobileHigherRight] = highLiftSpeed;
+			if(mobileForward){
+				motor[port8] = vexRT[Ch3];
+				motor[port2] = vexRT[Ch2];
+			}
+			else{
+				motor[port8] = -(vexRT[Ch2]);
+				motor[port2] = -(vexRT[Ch3]);
+			}
+		}
+
+		// set motor speed equal to zero once requested distance is reached.
 		motor[liftMobileHigherRight] = 0;
 		rightLiftPosition = 2;
 		}
