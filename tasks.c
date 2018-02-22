@@ -1,3 +1,14 @@
+/**
+ *This file define all the task and working Functions
+ *Author @ vex U
+ *Last date modified: Feb 21st,2018
+ * version: 1.2
+ * modified by Dat Nguyen
+ * ( added gyroscope interface) implement gyro scope detect value
+ * to a few function
+ * * added goDistance(double inch, int power) function
+ */
+// declare global variable
 bool leftLineReached = false;
 bool rightLineReached = false;
 int rightEncoderTarget = 0;
@@ -123,46 +134,7 @@ void turnRight(int leftTarget, int rightTarget){
 		return;
 }
 
-void strait(int leftTarget, int rightTarget){
-		//reset encoder results
-		rightEncoderReached = false;
-		leftEncoderReched = false;
 
-		//reset encoder values
-		SensorValue[leftEncoder] = 0;
-		SensorValue[rightEncoder] = 0;
-
-		//set encoder targets
-		rightEncoderTarget = rightTarget;
-		leftEncoderTarget = leftTarget;
-
-		if(leftTarget < 0 && rightTarget < 0){
-		//set motors in proper direction
-		motor[driveTrainLeft] = 127;
-		motor[driveTrainRight] = 127;
-
-		//when the encoders return the results, then stop the tasks, and end the function
-		startTask(rightForwardEncoderTest);
-		startTask(leftForwardEncoderTest);
-		waitUntil(rightEncoderReached == true && leftEncoderReched == true);
-		stopTask(rightForwardEncoderTest);
-		stopTask(leftForwardEncoderTest);
-		return;
-	}
-	else if(leftTarget > 0 && rightTarget > 0)
-		//set motors in proper direction
-		motor[driveTrainLeft] = -127;
-		motor[driveTrainRight] = -127;
-
-		//when the encoders return the results, then stop the tasks, and end the function
-		startTask(rightBackwardEncoderTest);
-		startTask(leftBackwardEncoderTest);
-		waitUntil(rightEncoderReached == true && leftEncoderReched == true);
-		stopTask(rightBackwardEncoderTest);
-		stopTask(leftBackwardEncoderTest);
-		return;
-
-}
 
 
 //LIFT CONTOL TASKS
@@ -267,3 +239,145 @@ task rightLowLiftDown(){
 	motor[liftMobileLowerRight] = 0;
 	stopTask(rightLowLiftDown);
 }
+
+void strait(int leftTarget, int rightTarget){
+		//reset encoder results
+		rightEncoderReached = false;
+		leftEncoderReched = false;
+
+		//reset encoder values
+		SensorValue[leftEncoder] = 0;
+		SensorValue[rightEncoder] = 0;
+
+		//set encoder targets
+		rightEncoderTarget = rightTarget;
+		leftEncoderTarget = leftTarget;
+
+		if(leftTarget < 0 && rightTarget < 0){
+		//set motors in proper direction
+		motor[driveTrainLeft] = 127;
+		motor[driveTrainRight] = 127;
+
+		//when the encoders return the results, then stop the tasks, and end the function
+		startTask(rightForwardEncoderTest);
+		startTask(leftForwardEncoderTest);
+		waitUntil(rightEncoderReached == true && leftEncoderReched == true);
+		stopTask(rightForwardEncoderTest);
+		stopTask(leftForwardEncoderTest);
+		return;
+	}
+	else if(leftTarget > 0 && rightTarget > 0)
+		//set motors in proper direction
+		motor[driveTrainLeft] = -127;
+		motor[driveTrainRight] = -127;
+
+		//when the encoders return the results, then stop the tasks, and end the function
+		startTask(rightBackwardEncoderTest);
+		startTask(leftBackwardEncoderTest);
+		waitUntil(rightEncoderReached == true && leftEncoderReched == true);
+		stopTask(rightBackwardEncoderTest);
+		stopTask(leftBackwardEncoderTest);
+		return;
+
+}
+
+
+/**
+ * this function activate the robot to drive straight with a requested
+ * distance in inches.( at a certain power(speed))
+ *@parameter double inches(requested distance in inch)
+ 						 int power;
+ * return void;
+ */
+
+void goDistance(double inch, int power){
+	//reset encoder results
+	rightEncoderReached = false;
+	leftEncoderReched = false;
+
+	//reset encoder values
+	SensorValue[leftEncoder] = 0;
+	SensorValue[rightEncoder] = 0;
+
+	//define constant
+	const double WHEEL_DIAMETER = 3.25;
+	const double TICK_PER_REV   = 90 ;
+
+	// conversion
+	double circumference = WHEEL_DIAMETER * PI;
+	double tickToGo = (inch / circumference) * TICK_PER_REV ;
+
+	//set encoder targets
+	rightEncoderTarget = tickToGo;
+	leftEncoderTarget = tickToGo;
+
+	if(tickToGo < 0){
+	//set motors in proper direction
+	motor[driveTrainLeft] = power;
+	motor[driveTrainRight] = power;
+
+	//when the encoders return the results, then stop the tasks, and end the function
+	startTask(rightForwardEncoderTest);
+	startTask(leftForwardEncoderTest);
+	waitUntil(rightEncoderReached == true && leftEncoderReched == true);
+	stopTask(rightForwardEncoderTest);
+	stopTask(leftForwardEncoderTest);
+
+else if(tickToGo > 0 && tickToGo > 0)
+	//set motors in proper direction
+	motor[driveTrainLeft] = -power;
+	motor[driveTrainRight] = -power;
+
+	//when the encoders return the results, then stop the tasks, and end the function
+	startTask(rightBackwardEncoderTest);
+	startTask(leftBackwardEncoderTest);
+	waitUntil(rightEncoderReached == true && leftEncoderReched == true);
+	stopTask(rightBackwardEncoderTest);
+	stopTask(leftBackwardEncoderTest);
+
+}// end goDistance()
+
+/**
+*This function rotate the robot relative to where the axis of the robot orientation
+*void rotate(int degree, int power)
+*@parameter degree - degree to turn relative to front of robot [0,3600]
+*                    power - rate of Turn
+*void
+*example: rotate(-30,100);// the bot will turn 30 degree CW with 100 powe
+*/
+
+void rotate(int degree,int power){//
+
+	// declare variables
+	int tickGoal =0 ;
+	int diff;
+	// start encodr count at 0
+	SensorValue[gyro] = 0;
+
+	if(SensorValue[gyro] < degree){// spin CW
+		while(SensorValue[gyro] < degree){
+			diff = abs(SensorValue[gyro] - (degree * 10) );
+			if(diff < 200){// if the difference between requested and current degree are 40 then slow down
+				motor[leftDrive] = -(power - 5);
+				motor[rightDrive] = (power - 5);
+			}else{
+				motor[leftMotor] = -power;
+				motor[rightMotor] = power;
+			}
+		}
+		motor[leftMotor]  = 0;
+		motor[rightMotor] = 0;
+	}else if(SensorValue[gyro] > degree){ // if degree is negativen // then rotate CCW
+		while(SensorValue[gyro] > degree){
+			diff = abs(SensorValue[gyro] - degree);
+			if(diff < 200){// if the difference between requested and current degree are 40 then slow down
+				motor[leftDrive] = (power - 5);
+				motor[rightDrive] = -(power - 5);
+			}else{
+				motor[leftMotor] = power;
+				motor[rightMotor] = -power;
+			}
+	}
+	motor[leftMotor]  = 0;
+	motor[rightMotor] = 0;
+ }

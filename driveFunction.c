@@ -25,8 +25,8 @@ void drive(float inch,int power){
 
    if(SensorValue[gyro] < degree){// spin CW
      while(SensorValue[gyro] < degree){
-       diff = abs(SensorValue[gyro] - degree);
-       if(diff < 40){// if the difference between requested and current degree are 40 then slow down
+       diff = abs(SensorValue[gyro] - (degree * 10) );
+       if(diff < 200){// if the difference between requested and current degree are 40 then slow down
          motor[leftDrive] = -(power - 5);
          motor[rightDrive] = (power - 5);
        }else{
@@ -37,7 +37,7 @@ void drive(float inch,int power){
    }else if(SensorValue[gyro] > degree){ // if degree is negativen // then rotate CCW
      while(SensorValue[gyro] > degree){
        diff = abs(SensorValue[gyro] - degree);
-       if(diff < 40){// if the difference between requested and current degree are 40 then slow down
+       if(diff < 200){// if the difference between requested and current degree are 40 then slow down
          motor[leftDrive] = (power - 5);
          motor[rightDrive] = -(power - 5);
        }else{
