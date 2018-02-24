@@ -323,7 +323,7 @@ task rightLowLiftDown(){
 	stopTask(rightLowLiftDown);
 }
 
-void highLift(int targetPos, int power){
+void manualHighLift(int targetPos, int power){
 	int currentPos = 0;
 	if(targetPos == 3){
 		while(sensorvalue[liftAngleLeft] < 3300){
