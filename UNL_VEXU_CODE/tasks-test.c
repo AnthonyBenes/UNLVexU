@@ -322,3 +322,71 @@ task rightLowLiftDown(){
 	motor[liftMobileLowerRight] = 0;
 	stopTask(rightLowLiftDown);
 }
+
+void highLift(int targetPos, int power){
+	int currentPos = 0;
+	if(targetPos == 3){
+		while(sensorvalue[liftAngleLeft] < 3300){
+			motor[liftMobileLowerRight] = power;
+			motor[liftMobileLowerLeft] = power;
+
+			// read value of the joystick
+			// control robot drive
+			motor[port8] = vexRT[Ch3];
+			motor[port2] = vexRT[Ch2];
+		}
+		// set motor to 0
+		motor[liftMobileHigherRight] = 0;
+		motor[liftMobileHigherLeft] = 0;
+		currentPos = 3;
+	}
+	else if(targetPos == 1){
+		while(sensorvalue[liftAngleLeft] > 1270){
+			motor[liftMobileLowerRight] = -power;
+			motor[liftMobileLowerLeft] = -power;
+
+			// read value of the joystick
+			// control robot drive
+			motor[port8] = vexRT[Ch3];
+			motor[port2] = vexRT[Ch2];
+		}
+		// set motor to 0
+		motor[liftMobileHigherRight] = 0;
+		motor[liftMobileHigherLeft] = 0;
+		currentPos = 1;
+	}
+
+	else if(rightLiftPosition == 3 && targetLiftPosition == 2){ //middle state going down
+
+	while(SensorValue[liftAngleRight] > 1940){
+		motor[liftMobileHigherRight] = -highLiftSpeed;
+		motor[liftMobileHigherLeft] = -highLiftSpeed;
+
+		// control robot drive
+		motor[port8] = vexRT[Ch3];
+		motor[port2] = vexRT[Ch2];
+	}
+
+	// set motor speed zero once requested distance is reached.
+	motor[liftMobileHigherRight] = 0;
+	motor[liftMobileHigherLeft] = 0;
+	currentPos = 2;
+
+}else if(currentPos == 1 && targetPos == 2){ //middle state going up
+	while(SensorValue[liftAngleRight] < 1940){
+		motor[liftMobileHigherRight] = highLiftSpeed;
+		motor[liftMobileHigherLeft] = highLiftSpeed;
+
+		// control robot drive
+		motor[port8] = vexRT[Ch3];
+		motor[port2] = vexRT[Ch2];
+	}
+
+	// set motor speed equal to zero once requested distance is reached.
+	motor[liftMobileHigherRight] = 0;
+	motor[liftMobileHigherLeft] = 0;
+	currentPos = 2;
+	}
+
+
+}// end high lift
